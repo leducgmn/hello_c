@@ -1,0 +1,4 @@
+/home/anhld/projects/cc/hello_world/build/CMakeFiles/edit_cache.dir
+/home/anhld/projects/cc/hello_world/build/CMakeFiles/rebuild_cache.dir
+/home/anhld/projects/cc/hello_world/build/src/CMakeFiles/edit_cache.dir
+/home/anhld/projects/cc/hello_world/build/src/CMakeFiles/rebuild_cache.dir
