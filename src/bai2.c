@@ -1,9 +1,17 @@
 #include <stdio.h>
 
+// dem n so chan dau tien
+void demNSoChanDauTien(int n);
+
 int main () {
     int n = 10;
-    int i = 0;
+    demNSoChanDauTien(n);
+}
+
+void demNSoChanDauTien(int n) {
     int dem = 0;
+    int i = 0;
+
     while (dem < n) {
         if (i % 2 == 0) {
             dem += 1;
@@ -11,6 +19,4 @@ int main () {
         }
         i += 2;
     }
-
-
 }
