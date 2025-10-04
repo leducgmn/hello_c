@@ -31,9 +31,6 @@ int find_min_max_digit(int n, int *min, int *max, int *countmin, int *countmax) 
         *countmin = 1;
         *countmax = 1;
     } else {
-        // if (n < 0) {
-        //     n = -n;
-        // }
         while (n > 0) {
             int d = n % 10;
              
