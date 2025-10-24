@@ -10,11 +10,11 @@ int main () {
         if (n < 0) {
             n = -n;
         }
-    while (n > 0) {
-        n = n / 2;
-        count++;
-        }\
-    printf("so n co %d chu so trong he co so 2\n", count);
+        while (n > 0) {
+            n = n / 2;
+            count++;
+        }
+        printf("so n co %d chu so trong he co so 2\n", count);
     }
-return 0;
+    return 0;
 }
