@@ -1,12 +1,18 @@
 #include <stdio.h>
 
-void read_digit(int digit, int position) {
+void read_digit(int digit, int position, int tens) {
     switch (digit) {
         case 0:
-            printf("không ");
+            if (position == 1 && tens == 0) {
+                printf("không ");
+            }
             break;
         case 1:
-            printf("một ");
+            if (position == 1 && tens >= 2) {
+                printf("mốt ");
+            } else {
+                printf("một ");
+            }
             break;
         case 2:
             printf("hai ");
@@ -15,10 +21,18 @@ void read_digit(int digit, int position) {
             printf("ba ");
             break;
         case 4:
-            printf("bốn ");
+            if (position == 1 && tens >= 1) {
+                printf("tư ");
+            } else {
+                printf("bốn ");
+            }
             break;
         case 5:
-            printf("năm ");
+            if (position == 1 && tens >= 1) {
+                printf("lăm ");
+            } else {
+                printf("năm ");
+            }
             break;
         case 6:
             printf("sáu ");
@@ -42,16 +56,18 @@ void read_class(int number, char* class_name) {
     int tens = number / 10;
     tens = tens % 10;
     int units = number % 10;
-    read_digit(hundreds, 3);
+    read_digit(hundreds, 3, tens);
     printf("trăm ");
-    read_digit(tens, 2);
+    read_digit(tens, 2, tens);
     printf("mươi ");
-    read_digit(units, 1);
+    read_digit(units, 1, tens);
     printf("%s ", class_name);
 }
 
 int main() {
-    int number = 107218300; //147 258 369
+    int number;
+    printf("Nhập số: ");
+    scanf("%d", &number);
     int class[5];
     char* class_name[] = {"", "nghìn", "triệu", "tỉ", "nghìn tỉ"};
     int remainder;
