@@ -1,14 +1,25 @@
 #include <stdio.h>
+#include <stdbool.h>
 
-void read_digit(int digit, int position, int tens) {
+typedef enum {
+    UNITS = 1,
+    TENS,
+    HUNDREDS,
+} Place;
+
+void read_digit(int digit, int place, int tens, int units) {
     switch (digit) {
-        case 0:
-            if (position == 1 && tens == 0) {
+        case 0: // 0 o hang tram => doc la khong khi co so dung truoc 0, neu k thi se bo qua so 0
+            if (place == HUNDREDS) {
                 printf("không ");
-            }
+            } else if (place == UNITS && tens > 1) {
+                printf("mươi ");
+            } 
             break;
         case 1:
-            if (position == 1 && tens >= 2) {
+            if (place == TENS) {
+                printf("mười ");
+            } else if (place == UNITS && tens >= 2) {
                 printf("mốt ");
             } else {
                 printf("một ");
@@ -21,14 +32,14 @@ void read_digit(int digit, int position, int tens) {
             printf("ba ");
             break;
         case 4:
-            if (position == 1 && tens >= 1) {
+            if (place == UNITS && tens > 1) {
                 printf("tư ");
             } else {
                 printf("bốn ");
             }
             break;
         case 5:
-            if (position == 1 && tens >= 1) {
+            if (place == UNITS && tens >= 1) {
                 printf("lăm ");
             } else {
                 printf("năm ");
@@ -51,16 +62,23 @@ void read_digit(int digit, int position, int tens) {
     }
 }
 
-void read_class(int number, char* class_name) {
+void read_group(int number, char* class_name, bool is_start) {
     int hundreds = number / 100;
-    int tens = number / 10;
-    tens = tens % 10;
     int units = number % 10;
-    read_digit(hundreds, 3, tens);
-    printf("trăm ");
-    read_digit(tens, 2, tens);
-    printf("mươi ");
-    read_digit(units, 1, tens);
+    int tens = (number / 10) % 10;
+    if (hundreds != 0 || !is_start) {
+        read_digit(hundreds, HUNDREDS, tens, units);
+        printf("trăm ");
+    }
+    if (tens > 1) {
+        read_digit(tens, TENS, tens, units);
+        printf("mươi ");
+    } else if (tens == 1) {
+        read_digit(tens, TENS, tens, units);
+    } else if (units != 0 && (!is_start || hundreds != 0)) { 
+        printf("lẻ ");
+    }   
+    read_digit(units, UNITS, tens, units);
     printf("%s ", class_name);
 }
 
@@ -78,9 +96,14 @@ int main() {
         number = number / 1000;
         // printf("number = %d; remaider = %d\n", number, remainder);
     }
+    // neu i = count - 1 thi khong doc so dau tien
+    // if (i == count - 1) {}
+    // 
     for (int i = count - 1; i >= 0; i-- ) {
-        // printf("%d\n", class[i]);
-        read_class(class[i], class_name[i]);
+        int is_start = i == count - 1;
+        // printf("\n%03d: ", class[i]);
+        // printf("%d\n", i);
+        read_group(class[i], class_name[i], is_start);
     }
     printf("\n");
 }
