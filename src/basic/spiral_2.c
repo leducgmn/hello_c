@@ -15,21 +15,17 @@ int main() {
     // direction = 1, d_row = 1, d_col = 0 => limit[4] = {3, 3, 2, 2}
     // direction = 2, d_row = 0, d_col =-1 => limit[4] = {3, 3, 1, 2}
     // direction = 3, d_row =-1, d-col = 0 => limit[4] = {3, 3, 1, 1}
+    
+    //khi o hien tai = limit => chuyen huong 
     for (int i = 2; i <=n*n; i++) {
         // tìm vị trí điền số tiếp theo
-        int new_row = row + d_row[direction];
-        int new_col = col + d_col[direction];
-        if ((direction == 0 && new_col > limit[0]) ||
-            (direction == 1 && new_row > limit[1]) ||
-            (direction == 2 && new_col < limit[2]) ||           
-            (direction == 3 && new_row < limit[3]) ) {
+        if ((direction % 2 == 0 && col == limit[direction]) ||
+            (direction % 2 != 0 && row == limit[direction]) ) {
                 direction = (direction + 1) % 4;
                 limit[direction] += d_row[direction] + d_col[direction];
-            new_row = row + d_row[direction];
-            new_col = col + d_col[direction];
-        }
-        row = new_row;
-        col = new_col;
+            }
+            row += d_row[direction];
+            col += d_col[direction];
         // printf("[%d][%d]=%2d\n", row, col, i);
         spiral[row][col] = i;
     }
