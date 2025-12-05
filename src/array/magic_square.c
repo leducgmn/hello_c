@@ -83,21 +83,21 @@ void ms_4k(int n, int square[100][100]) {
     }
 }
 
-int go_L(int square[100][100], int row, int col, int value) {
-    square[row][col] = value + 1;
-    square[row + 1][col - 1] = value + 2;
-    square[row + 1][col] = value + 3;
-    square[row][col - 1] = value + 4;
+void go_L(int square[100][100], int row, int col, int value) {
+    square[row][col + 1] = value + 1;
+    square[row + 1][col] = value + 2;
+    square[row + 1][col + 1] = value + 3;
+    square[row][col] = value + 4;
 }
 
-int go_U(int square[100][100], int row, int col, int value) {
+void go_U(int square[100][100], int row, int col, int value) {
     square[row][col] = value + 1;
     square[row + 1][col] = value + 2;
     square[row + 1][col + 1] = value + 3;
     square[row][col + 1] = value + 4;
 }
 
-int go_X(int square[100][100], int row, int col, int value) {
+void go_X(int square[100][100], int row, int col, int value) {
     square[row][col] = value + 1;
     square[row + 1][col + 1] = value + 2;
     square[row + 1][col] = value + 3;
@@ -107,28 +107,29 @@ int go_X(int square[100][100], int row, int col, int value) {
 void ms_4k_2(int n, int square[100][100]) {
     int m = n/2;
     int k = (n - 2) / 4;
-    int row = 0;
-    int col = m / 2;
-    for (int value = 1; value <= m*m; value++) {
-        if ((row == k + 1 && col == k) || row < k + 1) {
-            go_L(square, row, col, value );
-        } else if ((row == k && col == k) || row == k + 1) {
-            go_U(square, row, col, value);
+    
+    int row = 0; // ao
+    int col = m / 2; // ao
+
+    for (int value = 0; value < m*m; value++) {
+        if ((row == k + 1 && col == k) || row < k + 1) { // ao
+            go_L(square, 2*row, 2*col, value * 4); //that
+        } else if ((row == k && col == k) || row == k + 1) { // ao
+            go_U(square, 2*row, 2*col, value * 4); //that
         } else {
-            go_X(square, row, col, value);
+            go_X(square, 2*row, 2*col, value * 4); //that
         }
-        
-        int new_row = row == 0 ? m-1 : row - 1;
-        int new_col = col == m - 1 ? 0 : col + 1;
-        if (square[new_row][new_col] != 0) {
+
+        int new_row = row == 0 ? m-1 : row - 1;//ao
+        int new_col = col == m - 1 ? 0 : col + 1;//ao
+        if (square[2*new_row][2*new_col] != 0) {
             new_row = (row + 1) % m;
             new_col = col;
         }
-        row = new_row;
-        col = new_col;
-        // square[row][col] = value;
+        row = new_row; //ao
+        col = new_col; //ao
+        print_square(square, n);
     }
-    printf("%d\n", n);
 }
 
 void print_square(int square[100][100], int n) {
