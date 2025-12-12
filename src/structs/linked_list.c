@@ -34,10 +34,7 @@ Node* intitialize_node (int value) {
 }
 
 int get_length(List *list) {
-    int count = 0;
-    Node *node = list->head;
-
-    return count;
+    return list->length;
 }
 
 Node* add_node (List *list, int value) {
@@ -54,7 +51,7 @@ Node* add_node (List *list, int value) {
 }
 
 Node *add_node_at(List *list, int value, int index) {
-    if (index < 0 || index >= list->length) {
+    if (index < 0 || index > list->length) {
         return NULL;
     }
 

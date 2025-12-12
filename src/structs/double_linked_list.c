@@ -20,6 +20,7 @@ List* intitialize_list () {
     } 
     list->head = NULL;
     list->tail = NULL;
+    list->length = 0;   
     return list;
 }
 
@@ -30,14 +31,12 @@ Node* intitialize_node (int value) {
     } 
     node->value = value;
     node->next_node = NULL;
+    node->prev_node = NULL;
     return node;
 }
 
 int get_length(List *list) {
-    int count = 0;
-    Node *node = list->head;
-
-    return count;
+    return list->length;
 }
 
 Node* add_node (List *list, int value) {
@@ -46,6 +45,7 @@ Node* add_node (List *list, int value) {
         list->head = new_node;
         list->tail = new_node;
     } else {
+        new_node->prev_node = list->tail;
         list->tail->next_node = new_node;
         list->tail = new_node;
     }
@@ -54,49 +54,35 @@ Node* add_node (List *list, int value) {
 }
 
 Node *add_node_at(List *list, int value, int index) {
-    if (index < 0 || index >= list->length) {
+    if (index < 0 || index > list->length) {
         return NULL;
     }
 
-    Node *new_node = intitialize_node (value);
-
-    if (index == 0) {
-        new_node->next_node = list->head;
-        list->head = new_node;
-
-        if (list->tail == NULL) 
-            list->tail = new_node;
-        return new_node;
-    }
-
-    if (index == list->length) {
-        list->tail->next_node = new_node;
-        list->tail = new_node;
-        return new_node;
-    }
-
+    Node *new_node = intitialize_node(value);
     int count = 0;
     Node *node = list->head;
-    Node *prev = NULL;
+
     while (node != NULL && count != index) {
         count++;
-        prev = node;
         node = node->next_node;
     }
-    if (prev == NULL) {
-        prev = node->next_node;
-    }
-    prev->next_node = new_node;
-    new_node->next_node = node;
-    list->length++;
 
+    Node *prev = node->prev_node;
+
+    prev->next_node = new_node;
+    new_node->prev_node = prev;
+
+    new_node->next_node = node;
+    node->prev_node = new_node;
+
+    list->length++;
     return new_node;
 }
 
 void print_list(List *list) {
     Node *node = list->head;
     while (node != NULL) {
-        printf("(%d) -> ", node->value);
+        printf("(%d) <-> ", node->value);
         node = node->next_node;
     }
     printf("End; length = %d\n", list->length);
@@ -127,9 +113,7 @@ void remove_head(List* list) {
 
 void remove_node(List *list, int value) {
     Node *node = list->head;
-    Node *prev = NULL;
     while (node != NULL && node->value != value) {
-        prev = node;
         node = node->next_node;
     }
 
@@ -137,11 +121,12 @@ void remove_node(List *list, int value) {
         return;
     }
 
-    if (prev == NULL) {
+    if (node->prev_node == NULL) {
         remove_head(list);
     } else {
         list->length--;
-        prev->next_node = node->next_node;
+        node->prev_node->next_node = node->next_node;
+        node->next_node->prev_node = node->prev_node;
         free(node);
     }
 }
@@ -152,12 +137,10 @@ void remove_at(List* list, int index) {
     }
 
     int i = 0;
-    Node *prev = NULL;
     Node *node = list->head;
 
     while (node != NULL && i != index) {
         i++;
-        prev = node;
         node = node->next_node;
     }
 
@@ -165,17 +148,30 @@ void remove_at(List* list, int index) {
         return;
     }
 
-    if (prev == NULL) {
+    if (i == 0) {
         remove_head(list);
     } else {
         list->length--;
-        prev->next_node = node->next_node;
+        node->prev_node->next_node = node->next_node;
+        node->next_node->prev_node = node->prev_node;
         free(node);
     }
 }
     
 void remove_tail(List* list) {
-    remove_at(list, list->length -1);
+    if (list->tail == NULL) {
+	    return;
+    }
+    Node *prev = list->tail->prev_node;
+    free(list->tail);
+    if (prev == NULL) {
+	    list->head = NULL;
+        list->tail = NULL;
+    } else {
+	    prev->next_node = NULL;
+	    list->tail = prev;
+    }
+    list->length--;
 }
 
 void free_list(List *list) {
@@ -193,28 +189,33 @@ int main() {
     List *list = intitialize_list();
     print_list(list);
 
-    printf("\n____add 4 nodes____\n");
+    printf("\n____add 2 nodes____\n");
     add_node(list, 5);
-    // add_node(list, 9);
-
+    add_node(list, 9);
     print_list(list);
+
+    printf("\n____romove index 0____\n");
     remove_at(list, 0);
     print_list(list);
 
+    printf("\n____add 5 nodes____\n");
     add_node(list, 3);
     add_node(list, 1);
     add_node(list, 2);
     add_node(list, 7);
     add_node(list, 0);
     print_list(list);
+    
+    printf("\n____remove node value = 3____\n");
     remove_node(list, 3);
     print_list(list);
 
     Node *m = get_node(list, 2);
     printf("List[%d] = %d\n",2 , m->value);
     
-    // remove_node(list, 2);   
-    // print_list(list);
+    printf("\n____remove node value = 2____\n");
+    remove_node(list, 2);   
+    print_list(list);
 
     printf("\n____remove node at index 2____\n");
     remove_at(list, 2);
@@ -226,5 +227,5 @@ int main() {
     
     free_list(list);
     printf("List pointer = %p\n", list);
-
+    
 }
